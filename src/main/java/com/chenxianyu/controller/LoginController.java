@@ -6,10 +6,7 @@ import com.chenxianyu.entity.User;
 import com.chenxianyu.service.IUserService;
 import com.chenxianyu.utils.MD5Util;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/login")
@@ -19,7 +16,7 @@ public class LoginController {
     @Autowired
     private IUserService userService;
 
-    @RequestMapping("/login")
+    @PostMapping
     public R login(@RequestBody User user) {
         String email = user.getEmail();
         String password = user.getPassword();
