@@ -97,7 +97,11 @@ public class User implements Serializable {
     @TableField("password")
     private String password;
 
+    @TableField("is_use")
+    private String isUse;
 
+    @TableField("role")
+    private String role;
 
     public String getPassword() {
         return password;
@@ -201,5 +205,21 @@ public class User implements Serializable {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public String getIsUse() {
+        return isUse;
+    }
+
+    public void setIsUse(String isUse) {
+        this.isUse = isUse;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 }
