@@ -19,7 +19,7 @@ public class CodeGenerator {
                             .serviceImpl("service.impl");// 设置 Service 实现类包名
                 })
                 .strategyConfig(builder -> {
-                    builder.addInclude("attendance_record") // 设置需要生成的表名
+                    builder.addInclude("leave_application") // 设置需要生成的表名
                             .entityBuilder()
                             .enableLombok() // 启用 Lombok
                             .enableTableFieldAnnotation() // 启用字段注解

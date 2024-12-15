@@ -70,3 +70,23 @@ CREATE TABLE attendance_statistics (
                                        UNIQUE KEY uk_user_month (user_id, statistics_month),
                                        INDEX idx_statistics_month (statistics_month)
 ) COMMENT='考勤统计表';
+
+-- 请假申请表
+CREATE TABLE leave_application (
+                                   id INT PRIMARY KEY AUTO_INCREMENT COMMENT '主键ID',
+                                   user_id VARCHAR(32) NOT NULL COMMENT '用户编号',
+                                   name VARCHAR(50) NOT NULL COMMENT '申请人姓名',
+                                   group_name VARCHAR(50) COMMENT '所属团队/项目组',
+                                   leave_type VARCHAR(20) NOT NULL COMMENT '请假类型（事假、病假、年假等）',
+                                   start_time DATETIME NOT NULL COMMENT '开始时间',
+                                   end_time DATETIME NOT NULL COMMENT '结束时间',
+                                   duration DECIMAL(4,1) NOT NULL COMMENT '请假时长(天)',
+                                   reason VARCHAR(500) NOT NULL COMMENT '请假原因',
+                                   status VARCHAR(20) NOT NULL DEFAULT '待审批' COMMENT '状态（待审批、已批准、已拒绝）',
+                                   approver_id VARCHAR(32) COMMENT '审批人ID',
+                                   approver_name VARCHAR(50) COMMENT '审批人姓名',
+                                   approval_time DATETIME COMMENT '审批时间',
+                                   approval_remark VARCHAR(200) COMMENT '审批备注',
+                                   created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+                                   updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间'
+) COMMENT '请假申请表';

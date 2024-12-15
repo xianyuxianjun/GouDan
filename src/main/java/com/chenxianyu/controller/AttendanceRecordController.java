@@ -1,5 +1,6 @@
 package com.chenxianyu.controller;
 
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.chenxianyu.entity.AttendanceRecord;
 import com.chenxianyu.entity.R;
 import com.chenxianyu.service.IAttendanceRecordService;
@@ -7,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -108,13 +111,51 @@ public class AttendanceRecordController {
     /**
      * 根据日期查询考勤记录
      * @param attendanceRecord 包含目标日期的考勤记录实体
-     * @return 指定日期的所有考勤记录列表
+     * @return 指定日期的考勤记录
      */
     @PostMapping("/getByDate")
-    public R getByDate(@RequestBody AttendanceRecord attendanceRecord){
+    public R getByDate(@RequestBody AttendanceRecord attendanceRecord) {
         QueryWrapper<AttendanceRecord> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("attendance_date", attendanceRecord.getAttendanceDate());
-        List<AttendanceRecord> list = attendanceRecordService.list(queryWrapper);
-        return R.success(list);
+        queryWrapper.eq("attendance_date", attendanceRecord.getAttendanceDate())
+                .eq("user_id", attendanceRecord.getUserId());
+
+        try {
+            // 查询指定日期的考勤记录
+            List<AttendanceRecord> records = attendanceRecordService.list(queryWrapper);
+
+            // 返回结果
+            if (records != null && !records.isEmpty()) {
+                return R.success( records,"查询成功");
+            } else {
+                return R.success("未找到考勤记录");
+            }
+        } catch (Exception e) {
+            return R.fail("查询失败");
+        }
+    }
+
+    @PostMapping("/getByMonth")
+    public R getByMonth(@RequestBody Map<String, String> params) {
+        try {
+            String userId = params.get("userId");
+            String month = params.get("month");  // 格式应为 "YYYY-MM"
+
+            if (StringUtils.isEmpty(userId) || StringUtils.isEmpty(month)) {
+                return R.fail("参数不能为空");
+            }
+
+            // 构建查询条件
+            QueryWrapper<AttendanceRecord> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("user_id", userId)
+                    .apply("DATE_FORMAT(attendance_date, '%Y-%m') = {0}", month)
+                    .orderByAsc("attendance_date");
+
+            // 执行查询
+            List<AttendanceRecord> list = attendanceRecordService.list(queryWrapper);
+
+            return R.success(list,"查询成功");
+        } catch (Exception e) {
+            return R.fail("获取月度考勤记录失败");
+        }
     }
 }
